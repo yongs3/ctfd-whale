@@ -76,8 +76,8 @@ class DynamicValueDockerChallenge(BaseChallenge):
         if len(flags) > 0:
             for flag in flags:
                 if get_flag_class(flag.type).compare(flag, submission):
-                    return True, "Correct"
-            return False, "Incorrect"
+                    return True, "정답입니다"
+            return False, "오답입니다"
         else:
             user_id = current_user.get_current_user().id
             q = db.session.query(WhaleContainer)
@@ -85,12 +85,12 @@ class DynamicValueDockerChallenge(BaseChallenge):
             q = q.filter(WhaleContainer.challenge_id == challenge.id)
             records = q.all()
             if len(records) == 0:
-                return False, "Please solve it during the container is running"
+                return False, "인스턴스가 실행 중일 때 문제를 해결해주세요"
 
             container = records[0]
             if container.flag == submission:
-                return True, "Correct"
-            return False, "Incorrect"
+                return True, "정답입니다"
+            return False, "오답입니다"
 
     @classmethod
     def solve(cls, user, team, challenge, request):
