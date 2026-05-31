@@ -41,9 +41,9 @@ function loadInfo() {
         }
         if (response.success) response = response.data;
         else CTFd._functions.events.eventAlert({
-            title: "Fail",
+            title: "실패",
             html: response.message,
-            button: "OK"
+            button: "확인"
         });
         if (response.remaining_time != undefined) {
             $('#whale-challenge-user-access').html(response.user_access);
@@ -72,7 +72,7 @@ CTFd._internal.challenge.destroy = function () {
     var challenge_id = CTFd._internal.challenge.data.id;
     var url = "/api/v1/plugins/ctfd-whale/container?challenge_id=" + challenge_id;
 
-    $('#whale-button-destroy').text("Waiting...");
+    $('#whale-button-destroy').text("처리 중...");
     $('#whale-button-destroy').prop('disabled', true);
 
     var params = {};
@@ -99,19 +99,19 @@ CTFd._internal.challenge.destroy = function () {
         if (response.success) {
             loadInfo();
             CTFd._functions.events.eventAlert({
-                title: "Success",
-                html: "Your instance has been destroyed!",
-                button: "OK"
+                title: "성공",
+                html: "인스턴스가 삭제되었습니다.",
+                button: "확인"
             });
         } else {
             CTFd._functions.events.eventAlert({
-                title: "Fail",
+                title: "실패",
                 html: response.message,
-                button: "OK"
+                button: "확인"
             });
         }
     }).finally(() => {
-        $('#whale-button-destroy').text("Destroy this instance");
+        $('#whale-button-destroy').text("인스턴스 삭제");
         $('#whale-button-destroy').prop('disabled', false);
     });
 };
@@ -120,7 +120,7 @@ CTFd._internal.challenge.renew = function () {
     var challenge_id = CTFd._internal.challenge.data.id;
     var url = "/api/v1/plugins/ctfd-whale/container?challenge_id=" + challenge_id;
 
-    $('#whale-button-renew').text("Waiting...");
+    $('#whale-button-renew').text("처리 중...");
     $('#whale-button-renew').prop('disabled', true);
 
     var params = {};
@@ -147,19 +147,19 @@ CTFd._internal.challenge.renew = function () {
         if (response.success) {
             loadInfo();
             CTFd._functions.events.eventAlert({
-                title: "Success",
-                html: "Your instance has been renewed!",
-                button: "OK"
+                title: "성공",
+                html: "인스턴스가 연장되었습니다.",
+                button: "확인"
             });
         } else {
             CTFd._functions.events.eventAlert({
-                title: "Fail",
+                title: "실패",
                 html: response.message,
-                button: "OK"
+                button: "확인"
             });
         }
     }).finally(() => {
-        $('#whale-button-renew').text("Renew this instance");
+        $('#whale-button-renew').text("인스턴스 연장");
         $('#whale-button-renew').prop('disabled', false);
     });
 };
@@ -168,7 +168,7 @@ CTFd._internal.challenge.boot = function () {
     var challenge_id = CTFd._internal.challenge.data.id;
     var url = "/api/v1/plugins/ctfd-whale/container?challenge_id=" + challenge_id;
 
-    $('#whale-button-boot').text("Waiting...");
+    $('#whale-button-boot').text("처리 중...");
     $('#whale-button-boot').prop('disabled', true);
 
     var params = {};
@@ -195,19 +195,19 @@ CTFd._internal.challenge.boot = function () {
         if (response.success) {
             loadInfo();
             CTFd._functions.events.eventAlert({
-                title: "Success",
-                html: "Your instance has been deployed!",
-                button: "OK"
+                title: "성공",
+                html: "인스턴스가 생성되었습니다.",
+                button: "확인"
             });
         } else {
             CTFd._functions.events.eventAlert({
-                title: "Fail",
+                title: "실패",
                 html: response.message,
-                button: "OK"
+                button: "확인"
             });
         }
     }).finally(() => {
-        $('#whale-button-boot').text("Launch an instance");
+        $('#whale-button-boot').text("인스턴스 생성");
         $('#whale-button-boot').prop('disabled', false);
     });
 };

@@ -70,14 +70,22 @@ class DynamicValueDockerChallenge(BaseChallenge):
     def attempt(cls, challenge, request):
         data = request.form or request.get_json()
         submission = data["submission"].strip()
+        is_admin_preview = current_user.is_admin() and request.args.get("preview", False)
+        correct_message = "Correct" if is_admin_preview else "정답입니다"
+        incorrect_message = "Incorrect" if is_admin_preview else "오답입니다"
+        no_container_message = (
+            "Please solve it during the container is running"
+            if is_admin_preview else
+            "인스턴스가 실행 중일 때 문제를 해결해주세요"
+        )
 
         flags = Flags.query.filter_by(challenge_id=challenge.id).all()
 
         if len(flags) > 0:
             for flag in flags:
                 if get_flag_class(flag.type).compare(flag, submission):
-                    return True, "Correct"
-            return False, "Incorrect"
+                    return True, correct_message
+            return False, incorrect_message
         else:
             user_id = current_user.get_current_user().id
             q = db.session.query(WhaleContainer)
@@ -85,12 +93,12 @@ class DynamicValueDockerChallenge(BaseChallenge):
             q = q.filter(WhaleContainer.challenge_id == challenge.id)
             records = q.all()
             if len(records) == 0:
-                return False, "Please solve it during the container is running"
+                return False, no_container_message
 
             container = records[0]
             if container.flag == submission:
-                return True, "Correct"
-            return False, "Incorrect"
+                return True, correct_message
+            return False, incorrect_message
 
     @classmethod
     def solve(cls, user, team, challenge, request):

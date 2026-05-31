@@ -6,28 +6,28 @@
         <div id="whale-panel" style="width: 100%;">
             <div id="whale-panel-stopped" class="card" style="width: 100%;">
                 <div class="card-body">
-                    <h5 class="card-title">Instance Info</h5>
+                    <h5 class="card-title">인스턴스 정보</h5>
                     <button class="btn btn-primary card-link" id="whale-button-boot" type="button"
-                        onclick="CTFd._internal.challenge.boot()">Launch an instance</button>
+                        onclick="CTFd._internal.challenge.boot()">인스턴스 생성</button>
                 </div>
             </div>
             <div id="whale-panel-started" type="hidden" class="card" style="width: 100%;">
                 <div class="card-body">
-                    <h5 class="card-title">Instance Info</h5>
+                    <h5 class="card-title">인스턴스 정보</h5>
                     <h6 class="card-subtitle mb-2 text-muted">
-                        Remaining Time: <span id="whale-challenge-count-down"></span>s
+                        남은 시간: <span id="whale-challenge-count-down"></span>초
                     </h6>
                     <h6 class="card-subtitle mb-2 text-muted">
-                        Lan Domain: <span id="whale-challenge-lan-domain"></span>
+                        내부 도메인: <span id="whale-challenge-lan-domain"></span>
                     </h6>
                     <p id="whale-challenge-user-access" class="card-text"></p>
                     <button type="button" class="btn btn-danger card-link" id="whale-button-destroy"
                             onclick="CTFd._internal.challenge.destroy()">
-                        Destroy this instance
+                        인스턴스 삭제
                     </button>
                     <button type="button" class="btn btn-success card-link" id="whale-button-renew"
                             onclick="CTFd._internal.challenge.renew()">
-                        Renew this instance
+                        인스턴스 연장
                     </button>
                 </div>
             </div>
