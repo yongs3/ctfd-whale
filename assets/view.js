@@ -36,7 +36,7 @@ function loadInfo() {
         return response.json();
     }).then(function (response) {
         if (window.t !== undefined) {
-            clearInterval(window.t);
+            clearTimeout(window.t);
             window.t = undefined;
         }
         if (response.success) response = response.data;
@@ -48,25 +48,37 @@ function loadInfo() {
         if (response.remaining_time != undefined) {
             $('#whale-challenge-user-access').html(response.user_access);
             $('#whale-challenge-lan-domain').html(response.lan_domain);
-            $('#whale-challenge-count-down').text(response.remaining_time);
+
+            // 서버가 준 '남은 초'를 절대 종료 시각으로 환산해 한 번만 고정한다.
+            // 직전 표시값을 1씩 깎는 대신 실제 시계 기준의 고정 시각을 보여주므로,
+            // 브라우저가 백그라운드 탭 타이머를 느리게 돌려도 표시가 어긋나지 않는다.
+            // 또한 timeZone을 Asia/Seoul로 고정하므로, 서버(UTC)·학생 PC 타임존과 무관하게 항상 KST로 표시된다.
+            const endTime = Date.now() + response.remaining_time * 1000;
+            $('#whale-challenge-end-time').text(new Date(endTime).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
             $('#whale-panel-stopped').hide();
             $('#whale-panel-started').show();
 
-            window.t = setInterval(() => {
-                const c = $('#whale-challenge-count-down').text();
-                if (!c) return;
-                let second = parseInt(c) - 1;
-                if (second <= 0) {
-                    loadInfo();
-                }
-                $('#whale-challenge-count-down').text(second);
-            }, 1000);
+            // 종료 시각이 지나면 서버에서 상태를 다시 받아와 패널(실행 중/중지됨)을 전환한다.
+            window.t = setTimeout(loadInfo, Math.max(0, endTime - Date.now()) + 1000);
         } else {
             $('#whale-panel-started').hide();
             $('#whale-panel-stopped').show();
         }
     });
 };
+
+// 탭이 백그라운드에 있는 동안 타이머가 throttle 되어 갱신이 밀릴 수 있으므로,
+// 다시 보이게 되면 즉시 서버 상태를 받아와 표시를 맞춘다.
+// (whale 인스턴스 패널이 실제로 떠 있을 때만 동작 — 다른 문제/모달엔 영향 없음)
+if (!window.whaleVisibilityBound) {
+    window.whaleVisibilityBound = true;
+    document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState !== 'visible') return;
+        if ($('#whale-challenge-end-time').length && $('#whale-panel-started').is(':visible')) {
+            loadInfo();
+        }
+    });
+}
 
 CTFd._internal.challenge.destroy = function () {
     var challenge_id = CTFd._internal.challenge.data.id;
