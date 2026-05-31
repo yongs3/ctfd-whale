@@ -52,9 +52,9 @@ function loadInfo() {
             // 서버가 준 '남은 초'를 절대 종료 시각으로 환산해 한 번만 고정한다.
             // 직전 표시값을 1씩 깎는 대신 실제 시계 기준의 고정 시각을 보여주므로,
             // 브라우저가 백그라운드 탭 타이머를 느리게 돌려도 표시가 어긋나지 않는다.
-            // 또한 클라이언트에서 계산하므로 서버 타임존(UTC)과 무관하게 브라우저 로컬(KST)로 표시된다.
+            // 또한 timeZone을 Asia/Seoul로 고정하므로, 서버(UTC)·학생 PC 타임존과 무관하게 항상 KST로 표시된다.
             const endTime = Date.now() + response.remaining_time * 1000;
-            $('#whale-challenge-end-time').text(new Date(endTime).toLocaleString('ko-KR'));
+            $('#whale-challenge-end-time').text(new Date(endTime).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }));
             $('#whale-panel-stopped').hide();
             $('#whale-panel-started').show();
 
